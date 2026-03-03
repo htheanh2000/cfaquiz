@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useMemo } from 'react';
+import { Suspense, useEffect, useState, useMemo } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth, useApi } from '@/components/providers/AuthProvider';
 import DashboardLayout from '@/components/layout/DashboardLayout';
@@ -29,7 +29,7 @@ interface PracticeSettings {
   showHints: boolean;
 }
 
-export default function PracticePage() {
+function PracticePageContent() {
   const { user, loading: authLoading } = useAuth();
   const api = useApi();
   const router = useRouter();
@@ -508,5 +508,26 @@ export default function PracticePage() {
         </div>
       </div>
     </DashboardLayout>
+  );
+}
+
+export default function PracticePage() {
+  return (
+    <Suspense
+      fallback={
+        <DashboardLayout>
+          <div className="min-h-screen flex items-center justify-center bg-white">
+            <div className="text-center">
+              <div className="size-16 rounded-full bg-gradient-education flex items-center justify-center mb-4 animate-pulse">
+                <Play className="h-8 w-8 text-primary-foreground" />
+              </div>
+              <p className="text-muted-foreground">Loading...</p>
+            </div>
+          </div>
+        </DashboardLayout>
+      }
+    >
+      <PracticePageContent />
+    </Suspense>
   );
 }
