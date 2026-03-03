@@ -1,0 +1,16 @@
+{
+  "name": "sapp-crawler",
+  "version": "1.0.0",
+  "description": "Crawler service to import CFA data from SAPP LMS",
+  "main": "crawler.js",
+  "scripts": {
+    "start": "node crawler.js",
+    "crawl:topics": "node crawler.js --topics",
+    "crawl:all": "node crawler.js --all"
+  },
+  "dependencies": {
+    "axios": "^1.6.0",
+    "dotenv": "^16.3.1",
+    "pg": "^8.11.3"
+  }
+}

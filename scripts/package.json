@@ -1,0 +1,13 @@
+{
+  "name": "cfaquiz-scripts",
+  "version": "1.0.0",
+  "description": "Scripts for CFA Quiz database operations",
+  "scripts": {
+    "generate": "node generate-explanations.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "openai": "^4.73.0",
+    "pg": "^8.13.1"
+  }
+}

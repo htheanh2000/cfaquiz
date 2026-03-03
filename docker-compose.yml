@@ -1,0 +1,64 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15
+    container_name: cfaquiz-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: cfaquiz
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: sSPZiIYhnEqi6e7xBzfenLekzrpWhDt
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - cfaquiz-db-data:/var/lib/postgresql/data/pgdata
+      - ./database/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+      - ./database/postgresql.conf:/etc/postgresql/postgresql.conf:ro
+    # SECURITY: Don't expose DB port to internet! Access via docker network only
+    # ports:
+    #   - "5433:5432"
+    expose:
+      - "5432"
+    # SECURITY HARDENING
+    security_opt:
+      - no-new-privileges:true
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - contabo_network
+    # Logging configuration
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: cfaquiz-app
+    env_file:
+      - .env.local
+    environment:
+      NODE_ENV: production
+      NEXTAUTH_URL: https://cfa.huynhtheanh.com
+      NEXTAUTH_SECRET: ZGrSt81OC/DLaspO4yZKDmC2iKO2FyeCpCedVeQxgcE=
+    ports:
+      - "3001:3000"
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - contabo_network
+
+volumes:
+  cfaquiz-db-data:
+
+networks:
+  contabo_network:
+    external: true
+    name: contabo_network
