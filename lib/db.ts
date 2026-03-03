@@ -2,7 +2,6 @@ import { Pool } from 'pg';
 
 const dbHost = process.env.DB_HOST || 'localhost';
 const isNeon = dbHost.includes('neon.tech');
-const isProduction = process.env.NODE_ENV === 'production';
 
 const pool = new Pool({
   host: dbHost,
@@ -13,7 +12,8 @@ const pool = new Pool({
   max: 20,
   idleTimeoutMillis: 30000,
   connectionTimeoutMillis: 5000,
-  ssl: (isProduction || isNeon) ? { rejectUnauthorized: false } : false,
+  // Only use SSL for Neon (cloud); local Docker Postgres does not use SSL
+  ssl: isNeon ? { rejectUnauthorized: false } : false,
 });
 
 // Test connection
