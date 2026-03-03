@@ -42,11 +42,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     });
 
     if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.error || 'Login failed');
+      let errorMessage = 'Login failed';
+      try {
+        const data = await response.json();
+        errorMessage = data?.error || errorMessage;
+      } catch {
+        errorMessage = response.status === 401 ? 'Invalid credentials' : `Request failed (${response.status})`;
+      }
+      throw new Error(errorMessage);
     }
 
     const data = await response.json();
+    if (!data?.user || !data?.token) {
+      throw new Error('Invalid login response');
+    }
     setUser(data.user);
     setToken(data.token);
     localStorage.setItem('token', data.token);
