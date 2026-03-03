@@ -3,9 +3,11 @@ import pool from '@/lib/db';
 import { getAuthUser, apiResponse, apiError, unauthorized } from '@/lib/utils/api-helpers';
 import OpenAI from 'openai';
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+function getOpenAI(): OpenAI {
+  const key = process.env.OPENAI_API_KEY;
+  if (!key) throw new Error('OPENAI_API_KEY is not set');
+  return new OpenAI({ apiKey: key });
+}
 
 // Configuration for rate limiting
 const CONFIG = {
@@ -45,6 +47,7 @@ Please provide:
 
 Keep the explanation concise but thorough (200-400 words). Use clear language suitable for CFA candidates. If mathematical formulas are needed, use LaTeX format with $ for inline and $$ for block equations.`;
 
+  const openai = getOpenAI();
   const response = await openai.chat.completions.create({
     model: 'gpt-4o-mini',
     messages: [
