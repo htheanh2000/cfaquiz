@@ -35,15 +35,11 @@ export async function POST(req: NextRequest) {
     // Generate token
     const token = generateToken(user.id);
 
-    // Create initial streak (best-effort; do not fail register if this fails)
-    try {
-      await pool.query(
-        'INSERT INTO streaks (user_id, current_streak, longest_streak) VALUES ($1, 0, 0) ON CONFLICT (user_id) DO NOTHING',
-        [user.id]
-      );
-    } catch (streakErr) {
-      console.warn('[auth/register] Streak insert skipped:', streakErr);
-    }
+    // Create initial streak
+    await pool.query(
+      'INSERT INTO streaks (user_id, current_streak, longest_streak) VALUES ($1, 0, 0) ON CONFLICT (user_id) DO NOTHING',
+      [user.id]
+    );
 
     return apiResponse({
       user: {
