@@ -1,5 +1,5 @@
 # Deploy to VPS on push to main
-# Secrets: VPS_HOST, VPS_USER, VPS_SSH_KEY
+# Secrets: VPS_HOST, VPS_USER, VPS_PASSWORD
 # On VPS: clone this repo to e.g. /var/www/cfaquiz or /root/cfaquiz and set DEPLOY_PATH below
 
 name: Deploy to VPS
@@ -21,7 +21,7 @@ jobs:
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
-          key: ${{ secrets.VPS_SSH_KEY }}
+          password: ${{ secrets.VPS_PASSWORD }}
           script: |
             cd ${{ env.DEPLOY_PATH }}
             git pull origin main
