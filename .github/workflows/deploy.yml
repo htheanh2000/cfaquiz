@@ -1,3 +1,7 @@
+# ⚠️  Auto-disabled 2026-05-12: VPS Hostinger 31.97.109.177 shutdown.
+# Service đã chuyển Mac M1 homelab. Deploy = manual rsync + restart trên homelab.
+# Re-enable: uncomment `push:` block + rewrite deploy step cho target mới.
+
 # Deploy to VPS on push to main
 # Secrets: VPS_HOST, VPS_USER, VPS_PASSWORD
 # On VPS: clone this repo to e.g. /var/www/cfaquiz or /root/cfaquiz and set DEPLOY_PATH below
@@ -5,8 +9,8 @@
 name: Deploy to VPS
 
 on:
-  push:
-    branches: [main]
+  # push:  # disabled — VPS shutdown 2026-05-12
+  # branches: [main]
   workflow_dispatch:
 
 env:
